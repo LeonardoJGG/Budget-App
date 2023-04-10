@@ -1,0 +1,48 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: mybackend
+  ports:
+  - port: 3000
+    targetPort: 3000
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mybackend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mybackend
+  template:
+    metadata:
+      labels:
+        app: mybackend
+    spec:
+      containers:
+      - name: mybackend
+        image: leonardev7/budget-backend:0.5.0
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: admin
+        - name: DATABASE_URL
+          value: database-service:5432/postgres
+        # - name: JWT_SECRET
+        #   value: thisismysecretjwtpasswordforlogincontroller
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 3000
+ 

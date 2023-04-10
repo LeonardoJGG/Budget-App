@@ -1,0 +1,76 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: mydatabase
+  ports:
+  - port: 2022
+    targetPort: 5432
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydatabase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mydatabase
+  template:
+    metadata:
+      labels:
+        app: mydatabase
+    spec:
+      # volumes:
+      #   - name: database-postgres-database
+      #     PersistentVolumeClaim:
+      #       claimName: postgres-pv-claim
+      containers:
+      - name: mydatabase
+        image: postgres:15.2 
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: admin
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5432
+#         volumeMounts:
+#         - name: database-postgres
+#           mountPath: /var/lib/postgresql/data
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: postgres-pv-volume
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/var/lib/postgresql/data"
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: postgres-pv-claim
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi

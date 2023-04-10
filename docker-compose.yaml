@@ -1,0 +1,27 @@
+services:
+  frontend:
+    image: leonardev7/budget-frontend:0.1.0-alpine
+    ports:
+      - 8080:80
+  backend:
+    image: leonardev7/budget-backend:0.1.0
+    ports:
+      - 3000:3000
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - DATABASE_URL=mibasededatos:5432/budget
+      - JWT_SECRET=thisismysecretjwtpasswordforlogincontroller
+    restart: always
+  mibasededatos:
+    image: postgres:15.2 
+    ports:
+      - 2022:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - C:\Users\user\Desktop\Project-Budget\database:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+ postgres-data:

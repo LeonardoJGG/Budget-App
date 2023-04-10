@@ -1,0 +1,3 @@
+kubectl run mifrontend --image=leonardev7/budget-frontend:0.1.0-alpine
+
+kubectl port-forward pods/mifrontend 8080:80 -n default

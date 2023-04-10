@@ -1,0 +1,7 @@
+namespace: mycustoms
+
+resources:
+  - frontend.yml
+  - backend.yml
+  - database.yml
+  - ns.yml
